@@ -1,17 +1,24 @@
 package de.htwberlin.prog1.sose2021.spaceadventure.app;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class SpaceAdventureApp {
+import de.htwberlin.prog1.sose21.spaceadventure.model.SpaceShip;
 
+public class SpaceAdventureApp {
+	private static List<SpaceShip> spaceShips = new ArrayList<SpaceShip>();
 	private SpaceAdventureGame spaceAdventureGame = new SpaceAdventureGame();
 	private static Scanner scanner = new Scanner(System.in);
+	private static SpaceShip currentSpaceShip;
 
 	/**
 	 * @param args mainklasse
 	 */
 	public static void main(String[] args) {
-
+		spaceShips.add(new SpaceShip("XR", "hallo", 5));
+		spaceShips.add(new SpaceShip("XS", "goodbay", 2));
+		
 		while (true) {
 			showMenu();
 			String choice = readUserInput();
@@ -22,7 +29,8 @@ public class SpaceAdventureApp {
 
 	/**
 	 * 
-	 * @return
+	 * 
+	 * @return coiceInternal 
 	 */
 	private static String readUserInput() {
 		System.out.print("\nWas willst Du tun? Wähle einen Buchstaben:\t");
@@ -40,10 +48,21 @@ public class SpaceAdventureApp {
 		case "R":
 			createSpaceShip();
 			break;
+		case "C":
+			showSpaceShipsData();
+			selectSpaceShip();
+			break;
+		case "A": 
+			showSpaceShipsData();
+			break;
+		case "S":
+			addToSpaceShips();
+			break;
 		case "W":
 			showAdventureMenu();
 			break;
 		case "B":
+			System.exit(0);
 			break;
 
 		default: {
@@ -55,7 +74,52 @@ public class SpaceAdventureApp {
 		}
 	}
 
+	private static void addToSpaceShips() {
+		for(int i = 0; i < spaceShips.size(); i++) {
+			if(spaceShips.get(i).getId().equals(currentSpaceShip.getId())) return;
+		}
+		spaceShips.add(currentSpaceShip);
+	}
+    /**
+     * 
+     * gibt die Liste aller gespeicherten Raumschiffe an
+     * 
+     */
+	private static void selectSpaceShip() {
+		boolean found = false;
+		while (!found) {
+			System.out.println("Bitte geben Sie das Raumschiff-ID oder 'z' für zurück:");
+			String id = scanner.next();
+			for(int i = 0; i < spaceShips.size(); i++) {
+				if(spaceShips.get(i).getId().equals(id)) {
+					currentSpaceShip = spaceShips.get(i);
+					found = true;
+				}
+			}
+			if(id.equals("z"))break;
+			if(!found)System.out.println("falsche Eingabe ! Bitte vesuchen Sie noch einmal !");
+		}
+		
+	}
+	
 	/**
+	 * zeigt die Daten aller Raumschiffe an
+	 * 
+	 */
+
+	private static void showSpaceShipsData() {
+		for(int i =0; i< spaceShips.size(); i++) {
+			System.out.println("spaceShips nummer " + (i+1) + ":");
+			System.out.println();
+			spaceShips.get(i).print();
+			System.out.println();
+			System.out.println("#############");
+		}
+		
+	}
+
+	/**
+	 * zeigt die Lise des Spiels 
 	 * 
 	 */
 	private static void showMenu() {
@@ -76,10 +140,21 @@ public class SpaceAdventureApp {
 		}
 
 	}
+	
+	/**
+	 * 
+	 * erstellt ein Raumschiff
+	 * 
+	 */
 
 	private static void createSpaceShip() {
-		System.out.println(
-				"\nLeider hat die Methode noch keinen Code. Aber Du kannst hoffentlich nachvollziehen wie der Ablauf ist. Hier sollst Du ein Raumschiff anlegen.\n");
+		System.out.println("Wie heißt Dein Raumschiff ?");
+		String name = scanner.next();
+		System.out.println("Wie alt ist es ?");
+		int age = Integer.parseInt(scanner.next());
+		System.out.println(" Kannst du uns vielleicht über Dein Raumschifff erzählen? Wir sind gespannt. ");
+		String description = scanner.next();
+		currentSpaceShip = new SpaceShip(name, description, age);
 	}
 	
 	private static void showAdventureMenu() {
